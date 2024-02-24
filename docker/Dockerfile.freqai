@@ -1,5 +1,5 @@
-ARG sourceimage=freqtradeorg/freqtrade
-ARG sourcetag=develop
+ARG sourceimage=terrarebirth/freqtrade.dev
+ARG sourcetag=stable
 FROM ${sourceimage}:${sourcetag}
 
 # Install dependencies
