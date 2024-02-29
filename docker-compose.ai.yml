@@ -13,9 +13,6 @@ services:
     build:
       dockerfile: "./docker/Dockerfile.freqai"
     restart: unless-stopped
-    secrets:                    # secrets block only for 'freqtrqde' service
-     - FREQTRADE__EXCHANGE__KEY
-     - FREQTRADE__EXCHANGE__SECRETE
     container_name: freqtrade_ai
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
@@ -31,8 +28,4 @@ services:
       --strategy FreqaiExampleStrategy
       --freqaimodel LightGBMRegressor
       --strategy-path freqtrade/templates
-secrets:                       # top level secrets block
-  FREQTRADE__EXCHANGE__SECRET:
-    external: true
-  FREQTRADE__EXCHANGE__KEY:
-    external: true
+
