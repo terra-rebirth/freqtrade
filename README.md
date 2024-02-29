@@ -214,3 +214,57 @@ To run this bot we recommend you a cloud instance with a minimum of:
 - [virtualenv](https://virtualenv.pypa.io/en/stable/installation.html) (Recommended)
 - [Docker](https://www.docker.com/products/docker) (Recommended)
 # freqtrade
+
+### docker secrete
+```
+docker swarm init
+
+printf "<EXCHANGE KEY>" | docker secret create FREQTRADE__EXCHANGE__KEY -
+printf "<EXCHANGE SECRETE>" | docker secret create FREQTRADE__EXCHANGE__SECRETE -
+
+docker secret ls
+
+ID                          NAME                          DRIVER    CREATED          UPDATED
+hf4sdgd1v8y020tfyvf87w6ct   FREQTRADE__EXCHANGE__KEY                25 minutes ago   25 minutes ago
+xjs0kwleuhk5gwfwjpk2w5dc4   FREQTRADE__EXCHANGE__SECRET             21 minutes ago   21 minutes ago
+```
+### docker compose
+---
+version: '3.1'
+services:
+  freqtrade:
+    image: terrarebirth/freqtrade.ai:stable
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+              driver: nvidia
+              count: 1
+    build:
+      dockerfile: "./docker/Dockerfile.freqai"
+    restart: unless-stopped
+    secrets:                    # secrets block only for 'freqtrqde' service
+     - FREQTRADE__EXCHANGE__KEY
+     - FREQTRADE__EXCHANGE__SECRETE
+    container_name: freqtrade_ai
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+    volumes:
+      - "./user_data:/freqtrade/user_data"
+    ports:
+      - "8080:8080"
+    command: >
+      trade
+      --logfile /freqtrade/user_data/logs/freqtrade.ai.log
+      --db-url sqlite:////freqtrade/user_data/tradesv3.ai.sqlite
+      --config /freqtrade/user_data/config.ai.json
+      --strategy FreqaiExampleStrategy
+      --freqaimodel LightGBMRegressor
+      --strategy-path freqtrade/templates
+secrets:                       # top level secrets block
+  FREQTRADE__EXCHANGE__SECRET:
+    external: true
+  FREQTRADE__EXCHANGE__KEY:
+    external: true
+```
