@@ -219,8 +219,8 @@ To run this bot we recommend you a cloud instance with a minimum of:
 ```
 docker swarm init
 
-printf "<EXCHANGE KEY>" | docker secret create FREQTRADE__EXCHANGE__KEY -
-printf "<EXCHANGE SECRETE>" | docker secret create FREQTRADE__EXCHANGE__SECRETE -
+printf "<EXCHANGE KEY>" | docker compose secret create FREQTRADE__EXCHANGE__KEY -
+printf "<EXCHANGE SECRETE>" | docker compose secret create FREQTRADE__EXCHANGE__SECRETE -
 
 docker secret ls
 
